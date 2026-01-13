@@ -1,0 +1,38 @@
+name: Daily Power Grid Frequency Tracker
+
+on:
+  schedule:
+    # 每天北京时间早上 8:00 (UTC 0:00) 运行
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允许手动点击按钮触发
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run script
+      run: python main.py
+
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add index.html
+        git commit -m "Auto-update: $(date +'%Y-%m-%d')" || exit 0
+        git push

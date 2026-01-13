@@ -1,0 +1,4 @@
+feedparser
+jinja2
+pytz
+requests
